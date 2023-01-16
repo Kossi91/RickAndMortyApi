@@ -6,15 +6,22 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.example.rickandmortyapi.data.model.RickAndMorty
+import com.example.rickandmortyapi.data.model.Characters
 import com.example.rickandmortyapi.databinding.ItemRickAndMortyBinding
 
-class RickAndMortyAdapter :
-    ListAdapter<RickAndMorty, RickAndMortyAdapter.RickAndMortyViewHolder>(diffUtil) {
+class RickAndMortyAdapter(private val onClickListener: (id: Int) -> Unit) :
+    ListAdapter<Characters, RickAndMortyAdapter.RickAndMortyViewHolder>(diffUtil) {
 
-    inner class RickAndMortyViewHolder(val binding: ItemRickAndMortyBinding) :
+    inner class RickAndMortyViewHolder(private val binding: ItemRickAndMortyBinding) :
         ViewHolder(binding.root) {
-        fun onBind(item: RickAndMorty) {
+
+        init {
+            itemView.setOnClickListener {
+                getItem(adapterPosition).apply { onClickListener(id) }
+            }
+        }
+
+        fun onBind(item: Characters) {
             Glide.with(binding.imageIcon.context)
                 .load(item.image)
                 .into(binding.imageIcon)
@@ -41,12 +48,12 @@ class RickAndMortyAdapter :
     }
 
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<RickAndMorty>() {
-            override fun areItemsTheSame(oldItem: RickAndMorty, newItem: RickAndMorty): Boolean {
+        val diffUtil = object : DiffUtil.ItemCallback<Characters>() {
+            override fun areItemsTheSame(oldItem: Characters, newItem: Characters): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: RickAndMorty, newItem: RickAndMorty): Boolean {
+            override fun areContentsTheSame(oldItem: Characters, newItem: Characters): Boolean {
                 return oldItem.name == newItem.name
             }
         }

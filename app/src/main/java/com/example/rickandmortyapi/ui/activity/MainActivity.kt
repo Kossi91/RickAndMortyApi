@@ -2,6 +2,7 @@ package com.example.rickandmortyapi.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.navigation.fragment.NavHostFragment
 import com.example.rickandmortyapi.R
 
 class MainActivity : AppCompatActivity() {

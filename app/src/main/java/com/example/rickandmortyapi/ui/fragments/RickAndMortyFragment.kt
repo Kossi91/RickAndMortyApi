@@ -4,20 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelStore
-import com.example.rickandmortyapi.R
+import androidx.navigation.fragment.findNavController
+import com.example.rickandmortyapi.data.model.Characters
 import com.example.rickandmortyapi.databinding.FragmentRickAndMortyBinding
 import com.example.rickandmortyapi.ui.adapters.RickAndMortyAdapter
-import okhttp3.internal.EMPTY_REQUEST
 
 class RickAndMortyFragment : Fragment() {
 
     private lateinit var binding: FragmentRickAndMortyBinding
     private val viewModel by viewModels<RickAndMortyViewModel>()
-    private val rickAndMortyAdapter = RickAndMortyAdapter()
+    private val rickAndMortyAdapter = RickAndMortyAdapter(this::onClickFirstListener)
+    private val allCharacter = arrayListOf<Characters>()
+    private var nextPage = 2
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +31,8 @@ class RickAndMortyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initialize()
+        setupListeners()
+        setupRequests()
         setupObserve()
     }
 
@@ -38,9 +40,29 @@ class RickAndMortyFragment : Fragment() {
         binding.rvRickAndMorty.adapter = rickAndMortyAdapter
     }
 
+    private fun onClickFirstListener(id: Int) {
+        findNavController().navigate(
+            RickAndMortyFragmentDirections.actionRickAndMortyFragmentToDetailFragment(
+                id
+            )
+        )
+    }
+
+    private fun setupListeners() {
+        binding.btmAdd.setOnClickListener {
+            viewModel.getCharacter(page = nextPage++)
+        }
+    }
+
+    private fun setupRequests() {
+        viewModel.getCharacter(page = 1)
+    }
+
     private fun setupObserve() {
-       viewModel.rickAndMortyLiveData.observe(viewLifecycleOwner){
-          rickAndMortyAdapter.submitList(it)
-       }
+        viewModel.rickAndMortyLiveData.observe(viewLifecycleOwner) {
+            allCharacter.addAll(it)
+            rickAndMortyAdapter.submitList(allCharacter)
+            rickAndMortyAdapter.notifyDataSetChanged()
+        }
     }
 }

@@ -4,31 +4,28 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.rickandmortyapi.App
-import com.example.rickandmortyapi.data.model.RickAndMorty
+import com.example.rickandmortyapi.data.model.Characters
 import com.example.rickandmortyapi.data.repositories.RickAndMortyRepository
 
 class RickAndMortyViewModel : ViewModel() {
 
     private val repository = RickAndMortyRepository(App.retrofitClient.rickAndMortyApiService)
 
-    private val _rickAndMortyLiveData = MutableLiveData<List<RickAndMorty>>()
-    val rickAndMortyLiveData: LiveData<List<RickAndMorty>> = _rickAndMortyLiveData
+    private val _rickAndMortyLiveData = MutableLiveData<List<Characters>>()
+    val rickAndMortyLiveData: LiveData<List<Characters>> = _rickAndMortyLiveData
 
     private val _errorLiveData = MutableLiveData<String>()
     val errorLiveData:LiveData<String> = _errorLiveData
 
-    init {
-        getCharacter()
-    }
-
-    fun getCharacter() {
+    fun getCharacter(page: Int) {
         repository.getCharacter(
             onSuccess = {
                 _rickAndMortyLiveData.value = it
             },
             onFailure = {
                 _errorLiveData.value = it
-            }
+            },
+            page = page
         )
     }
 }
