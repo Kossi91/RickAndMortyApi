@@ -32,7 +32,6 @@ class RickAndMortyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initialize()
         setupListeners()
-        setupRequests()
         setupObserve()
     }
 
@@ -54,15 +53,14 @@ class RickAndMortyFragment : Fragment() {
         }
     }
 
-    private fun setupRequests() {
-        viewModel.getCharacter(page = 1)
-    }
-
     private fun setupObserve() {
         viewModel.rickAndMortyLiveData.observe(viewLifecycleOwner) {
             allCharacter.addAll(it)
             rickAndMortyAdapter.submitList(allCharacter)
             rickAndMortyAdapter.notifyDataSetChanged()
+        }
+        viewModel.errorLiveData.observe(viewLifecycleOwner){
+
         }
     }
 }

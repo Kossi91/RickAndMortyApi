@@ -42,5 +42,8 @@ class DetailFragment : Fragment() {
             tvSpecies.text = it.species
             tvStatus.text = it.status
         }
+        viewModel.errorDetailLiveData.observe(viewLifecycleOwner){
+
+        }
     }
 }

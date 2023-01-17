@@ -24,6 +24,7 @@ class RickAndMortyRepository(private val rickAndMortyApiService: RickAndMortyApi
                     if (response.isSuccessful) {
                         response.body()?.let {
                             onSuccess(it.results)
+                            it.results.clear()
                         }
                     }
                 }
@@ -59,7 +60,6 @@ class RickAndMortyRepository(private val rickAndMortyApiService: RickAndMortyApi
                         onFailure(it)
                     }
                 }
-
             })
     }
 }
